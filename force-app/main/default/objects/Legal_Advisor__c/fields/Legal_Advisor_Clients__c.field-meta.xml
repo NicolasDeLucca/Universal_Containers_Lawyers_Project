@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Legal_Advisor_Clients__c</fullName>
+    <externalId>false</externalId>
+    <label>Legal Advisor Clients</label>
+    <referenceTo>Client__c</referenceTo>
+    <relationshipLabel>Clients</relationshipLabel>
+    <relationshipName>Legal_Advisor</relationshipName>
+    <relationshipOrder>0</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>true</writeRequiresMasterRead>
+</CustomField>
