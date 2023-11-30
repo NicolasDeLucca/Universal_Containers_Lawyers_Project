@@ -1,6 +1,6 @@
 public with sharing class ucl_AdminService
 {
-    private static Map<String, String> getUniqueClientIdsFromJson()
+    private static Map<String, String> getUniqueClientIdsFromJson(String jsonData)
     {
         Map<String, String> uniqueClientIds = new Map<String, String>();
         
@@ -20,16 +20,16 @@ public with sharing class ucl_AdminService
         return uniqueClientIds;
     }
 
-    public static void deleteClientsNotInJson()
+    public static void deleteClientsNotInJson(String jsonData)
     {
-        Map<String, String> parsedClientIds = getUniqueClientIdsFromJson();
+        Map<String, String> parsedClientIds = getUniqueClientIdsFromJson(jsonData);
 
         List<Client__c> clientsToDelete =
         [
             SELECT Id
             FROM Client__c
             WHERE Legal_Advisor__c IN :parsedClientIds.keySet()
-                AND Client_Number__c NOT IN :parsedClientIds.get(Legal_Advisor__c.Account_Number__c)
+            AND Client_Number__c != :parsedClientIds.get(String.valueOf(Legal_Advisor__c.Account_Number__c))
         ];
 
         if (!clientsToDelete.isEmpty())
