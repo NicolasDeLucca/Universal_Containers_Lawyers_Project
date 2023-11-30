@@ -7,7 +7,7 @@
     <relationshipLabel>Clients</relationshipLabel>
     <relationshipName>Legal_Advisor</relationshipName>
     <relationshipOrder>0</relationshipOrder>
-    <reparentableMasterDetail>true</reparentableMasterDetail>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
     <trackTrending>false</trackTrending>
     <type>MasterDetail</type>
     <writeRequiresMasterRead>false</writeRequiresMasterRead>
