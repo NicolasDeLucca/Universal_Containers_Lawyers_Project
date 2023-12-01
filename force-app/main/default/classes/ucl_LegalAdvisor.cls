@@ -5,8 +5,4 @@ public with sharing class ucl_LegalAdvisor
     public String AccountStatus;
     public String AsOfDate;
     public List<ucl_Client> Clients;
-    
-    public ucl_LegalAdvisor()
-    {
-    }
 }

@@ -6,8 +6,4 @@ public with sharing class ucl_Client
     public String Phone;
     public String Address;
     public String ClientNumber;
-
-    public ucl_Client()
-    {
-    }
 }

@@ -11,8 +11,4 @@ public with sharing class ucl_NightlyIntegrationService implements Schedulable
             ucl_ErrorHandler.HandleError(e.getMessage());
         }
     }
-
-    public ucl_NightlyIntegrationService()
-    {
-    }
 }

@@ -22,8 +22,4 @@ public with sharing class ucl_HerokuIntegrationService
     
         return body;
     }
-
-    public ucl_HerokuIntegrationService()
-    { 
-    }
 }

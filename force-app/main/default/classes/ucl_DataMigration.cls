@@ -1,5 +1,6 @@
 public with sharing class ucl_DataMigration
 {
+    @AuraEnabled
     public static void migrateData()
     {
         String legalAdvisorsJson = ucl_HerokuIntegrationService.fetchLegalAccounts();
@@ -11,9 +12,5 @@ public with sharing class ucl_DataMigration
 
             ucl_AdminService.deleteClientsNotInJson(legalAdvisorsJson);
         }
-    }
-
-    public ucl_DataMigration()
-    {
     }
 }

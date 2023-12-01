@@ -38,8 +38,4 @@ public with sharing class ucl_AdminService
             delete clientsToDelete;
         }
     }
-
-    public ucl_AdminService()
-    {
-    }
 }

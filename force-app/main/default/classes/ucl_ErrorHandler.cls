@@ -38,8 +38,4 @@ public with sharing class ucl_ErrorHandler
         logError(errorMessage);
         sendErrorEmail(errorMessage);
     }
-
-    public ucl_ErrorHandler()
-    {
-    }
 }
