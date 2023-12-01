@@ -32,6 +32,7 @@ public with sharing class ucl_LegalAdvisorService
                 clientRecord.Address__c = client.Address;
                 clientRecord.Client_Number__c = client.ClientNumber;
                 clientRecord.Legal_Advisor__c = legalAdvisor.Id;
+                clientRecord.CreatedByAdmin__c = false;
 
                 processedClients.add(clientRecord);
             }

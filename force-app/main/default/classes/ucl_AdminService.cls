@@ -28,8 +28,9 @@ public with sharing class ucl_AdminService
         [
             SELECT Id
             FROM Client__c
-            WHERE Legal_Advisor__c IN :parsedClientIds.keySet()
-            AND Client_Number__c != :parsedClientIds.get(String.valueOf(Legal_Advisor__c.Account_Number__c))
+            WHERE CreatedByAdmin__c = false
+            AND Legal_Advisor__c IN :parsedClientIds.keySet()
+            AND Client_Number__c != :parsedClientIds.get(String.valueOf(Legal_Advisor__c.Account_Number__c))   
         ];
 
         if (!clientsToDelete.isEmpty())
