@@ -26,12 +26,11 @@ public with sharing class ucl_DataParser
     {
         List<ucl_LegalAdvisor> parsedLegalAdvisors = new List<ucl_LegalAdvisor>();
 
-        Map<String, Object> jsonMap = (Map<String, Object>) JSON.deserializeUntyped(jsonData);
+        List<Object> jsonList = (List<Object>) JSON.deserializeUntyped(jsonData);
 
-        List<Object> LegalAdvisors = (List<Object>) jsonMap.get('LegalAccounts');
-        if (LegalAdvisors != null)
+        if (jsonList != null)
         {
-            for (Object LegalAdvisor : LegalAdvisors)
+            for (Object LegalAdvisor : jsonList)
             {
                 Map<String, Object> LegalAdvisorMap = (Map<String, Object>) LegalAdvisor;
 
@@ -52,9 +51,4 @@ public with sharing class ucl_DataParser
 
         return parsedLegalAdvisors;
     }
-
-    public ucl_DataParser()
-    {
-    }
 }
-    
