@@ -155,8 +155,9 @@
     <externalSharingModel>Private</externalSharingModel>
     <label>ErrorLog</label>
     <nameField>
+        <displayFormat>Error-{00000}</displayFormat>
         <label>ErrorLog Name</label>
-        <type>Text</type>
+        <type>AutoNumber</type>
     </nameField>
     <pluralLabel>ErrorLogs</pluralLabel>
     <searchLayouts></searchLayouts>
