@@ -8,7 +8,7 @@ public with sharing class ucl_NightlyIntegrationService implements Schedulable
         }
         catch (Exception e)
         {
-            ucl_ErrorHandler.HandleError(e.getMessage());
+            ucl_ErrorHandler.handleError(e.getMessage());
         }
     }
 }

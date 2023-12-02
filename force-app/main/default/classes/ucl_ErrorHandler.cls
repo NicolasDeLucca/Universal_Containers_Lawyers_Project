@@ -33,7 +33,8 @@ public with sharing class ucl_ErrorHandler
         }
     }
 
-    public static void HandleError(String errorMessage)
+    @AuraEnabled
+    public static void handleError(String errorMessage)
     {
         logError(errorMessage);
         sendErrorEmail(errorMessage);
