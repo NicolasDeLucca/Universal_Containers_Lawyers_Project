@@ -6,6 +6,7 @@ public with sharing class ucl_ErrorHandler
         {
             ErrorLog__c errorLog = new ErrorLog__c();
             errorLog.ErrorMessage__c = errorMessage;
+            errorLog.CreatedByUser__c = false;
             insert errorLog;
         }
         catch (Exception e)

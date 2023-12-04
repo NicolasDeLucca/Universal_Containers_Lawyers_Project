@@ -31,7 +31,7 @@ public with sharing class ucl_LegalAdvisorService
             for (ucl_Client client : clients)
             {
                 Client__c clientRecord = new Client__c();
-				clientRecord.Name = client.FirstName + ' ' +client.LastName;
+                clientRecord.Name = client.FirstName + ' ' +client.LastName;
                 clientRecord.First_Name__c = client.FirstName;
                 clientRecord.Last_Name__c = client.LastName;
                 clientRecord.Email__c = client.Email;
@@ -39,7 +39,7 @@ public with sharing class ucl_LegalAdvisorService
                 clientRecord.Address__c = client.Address;
                 clientRecord.Client_Number__c = client.ClientNumber;
                 clientRecord.Legal_Advisor__c = legalAdvisor.Id;
-                clientRecord.CreatedByAdmin__c = false;
+                clientRecord.CreatedByUser__c = false;
 
                 processedClients.add(clientRecord);
             }
