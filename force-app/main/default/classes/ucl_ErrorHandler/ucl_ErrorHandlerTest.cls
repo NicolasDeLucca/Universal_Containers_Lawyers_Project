@@ -14,7 +14,7 @@ private class ucl_ErrorHandlerTest
             FROM ErrorLog__c
         ];
         
-		System.AssertEquals(errorsAmountbefore + 1, errorsLogged.size());
+        System.AssertEquals(errorsAmountbefore + 1, errorsLogged.size());
         System.AssertEquals(expectedErrorMessage, errorsLogged[errorsLogged.size()-1].ErrorMessage__c);
     }
     
@@ -35,7 +35,7 @@ private class ucl_ErrorHandlerTest
         [
             SELECT Subject, TextBody 
             FROM EmailMessage
-        	WHERE ToAddress = :adminAddress
+            WHERE ToAddress = :adminAddress
         ];
 
         EmailMessage lastEmail = sentEmails[sentEmails.size()-1];
