@@ -23,16 +23,34 @@ public with sharing class ucl_AdminService
     public static void deleteClientsNotInJson(String jsonData)
     {
         Map<String, String> parsedClientIds = getUniqueClientIdsFromJson(jsonData);
-
-        List<Client__c> clientsToDelete =
+    
+        List<Legal_Advisor__c> legalAdvisors = 
         [
-            SELECT Id
-            FROM Client__c
-            WHERE CreatedByAdmin__c = false
-            AND Legal_Advisor__c IN :parsedClientIds.keySet()
-            AND Client_Number__c != :parsedClientIds.get(String.valueOf(Legal_Advisor__c.Account_Number__c))   
+            SELECT Id, Account_Number__c 
+            FROM Legal_Advisor__c 
+            WHERE Account_Number__c IN :parsedClientIds.keySet()
         ];
-
+    
+        Map<Id, Legal_Advisor__c> legalAdvisorMap = new Map<Id, Legal_Advisor__c>(legalAdvisors);
+    
+        List<Client__c> allClients = 
+        [
+            SELECT Id, Legal_Advisor__c, Client_Number__c
+            FROM Client__c 
+            WHERE CreatedByUser__c = false
+            AND Legal_Advisor__c IN :legalAdvisorMap.keySet()];
+    
+        List<Client__c> clientsToDelete = new List<Client__c>();
+    
+        for (Client__c client : allClients)
+        {
+            Legal_Advisor__c legalAdvisor = legalAdvisorMap.get(client.Legal_Advisor__c);
+            if (client.Client_Number__c != parsedClientIds.get(String.valueOf(legalAdvisor.Account_Number__c)))
+            {
+                clientsToDelete.add(client);
+            }
+        }
+    
         if (!clientsToDelete.isEmpty())
         {
             delete clientsToDelete;
