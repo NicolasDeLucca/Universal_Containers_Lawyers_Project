@@ -3,7 +3,8 @@ global class ucl_LegalAccountsCalloutMock implements HttpCalloutMock
 {
     global HTTPResponse respond(HTTPRequest req)
     {
-        System.assertEquals('https://altimetrik-bootcamp.herokuapp.com/LegalAccounts', req.getEndpoint());
+        System.assertEquals('https://altimetrik-bootcamp.herokuapp.com/LegalAccounts', 
+            req.getEndpoint());
         System.assertEquals('GET', req.getMethod());
         
         HttpResponse res = new HttpResponse();
@@ -30,6 +31,7 @@ global class ucl_LegalAccountsCalloutMock implements HttpCalloutMock
             ']'+
            '}'
       	);
+        
         res.setStatusCode(200);
         return res;
     }
