@@ -25,7 +25,12 @@ private class ucl_ErrorHandlerTest
         String ExpectedEmailBody = 'An error occurred: ' + errorMessage;
         String adminAddress = System.Label.Admin_Email_Label;
             
-        Integer amountOfAdminEmails = [SELECT Count() FROM EmailMessage WHERE ToAddress = :adminAddress];
+        Integer amountOfAdminEmails = 
+        [
+            SELECT Count() 
+            FROM EmailMessage 
+            WHERE ToAddress = :adminAddress
+        ];
         
         Test.startTest();
         ucl_ErrorHandler.HandleError(errorMessage);
