@@ -1,50 +1,54 @@
 public with sharing class ucl_LegalAdvisorService
 {
-    private static Boolean shouldBeProccessed(String accountNumber, String accountStatus)
-    {
-        if (accountStatus == 'Enabled')
+    private static Boolean hasEnabledStatus(List<Legal_Advisor__c> existingLegalAdvisors, 
+        String accountNumber)
+    {  
+        for (Legal_Advisor__c legalAdvisor : existingLegalAdvisors)
         {
-            return true;
-        }
+            if (legalAdvisor.Account_Number__c == accountNumber && 
+                legalAdvisor.Account_Status__c == 'Enabled')
+            {
+                return true;
+            }   
+        }    
 
-        List<Legal_Advisor__c> existingLegalAdvisors = 
-        [
-            SELECT Id, Account_Status__c
-            FROM Legal_Advisor__c
-            WHERE Account_Number__c = :accountNumber
-        ];
-
-        if (!existingLegalAdvisors.isEmpty())
-        {
-            Legal_Advisor__c existingLegalAdvisor = existingLegalAdvisors[0];
-            return existingLegalAdvisor.Account_Status__c == 'Enabled';
-        }
-
-        return true;
+        return false;
     }
 
-    private static void processClients(Legal_Advisor__c legalAdvisor, List<ucl_Client> clients)
+    private static Boolean shouldBeProcessed(List<Legal_Advisor__c> existingLegalAdvisors,
+        String accountNumber, String accountStatus)
+    {
+        return accountStatus == 'Enabled' || hasEnabledStatus(existingLegalAdvisors, accountNumber);
+    }
+
+    private static void processClients(List<Legal_Advisor__c> legalAdvisors, Map<String, List<ucl_Client>> clientsMap)
     {
         List<Client__c> processedClients = new List<Client__c>();
-        if (clients != null && !clients.isEmpty())
-        {
-            for (ucl_Client client : clients)
-            {
-                Client__c clientRecord = new Client__c();
-                clientRecord.Name = client.FirstName + ' ' +client.LastName;
-                clientRecord.First_Name__c = client.FirstName;
-                clientRecord.Last_Name__c = client.LastName;
-                clientRecord.Email__c = client.Email;
-                clientRecord.Phone__c = client.Phone;
-                clientRecord.Address__c = client.Address;
-                clientRecord.Client_Number__c = client.ClientNumber;
-                clientRecord.Legal_Advisor__c = legalAdvisor.Id;
-                clientRecord.CreatedByUser__c = false;
 
-                processedClients.add(clientRecord);
+        for (Legal_Advisor__c legalAdvisor : legalAdvisors)
+        {
+            List<ucl_Client> clients = clientsMap.get(legalAdvisor.Account_Number__c);
+
+            if (clients != null && !clients.isEmpty())
+            {
+                for (ucl_Client client : clients)
+                {
+                    Client__c clientRecord = new Client__c();
+                    clientRecord.Name = client.FirstName + ' ' + client.LastName;
+                    clientRecord.First_Name__c = client.FirstName;
+                    clientRecord.Last_Name__c = client.LastName;
+                    clientRecord.Email__c = client.Email;
+                    clientRecord.Phone__c = client.Phone;
+                    clientRecord.Address__c = client.Address;
+                    clientRecord.Client_Number__c = client.ClientNumber;
+                    clientRecord.Legal_Advisor__c = legalAdvisor.Id;
+                    clientRecord.CreatedByUser__c = false;
+
+                    processedClients.add(clientRecord);
+                }
             }
         }
-        
+
         if (!processedClients.isEmpty())
         {
             upsert processedClients Client_Number__c;
@@ -53,7 +57,13 @@ public with sharing class ucl_LegalAdvisorService
 
     public static void processLegalAdvisors(List<ucl_LegalAdvisor> legalAdvisors)
     {
-        List<Legal_Advisor__c> legalAdvisorRecordsToUpdate = new List<Legal_Advisor__c>();
+        Map<String, List<ucl_Client>> clientsMap = new Map<String, List<ucl_Client>>();
+
+        List<Legal_Advisor__c> existingLegalAdvisors = 
+        [
+            SELECT Id, Account_Number__c, Account_Status__c
+            FROM Legal_Advisor__c
+        ];
 
         for (ucl_LegalAdvisor legalAdvisorModel : legalAdvisors)
         {
@@ -68,16 +78,32 @@ public with sharing class ucl_LegalAdvisorService
             String formattedDate = dateParts[2] + '-' + dateParts[0] + '-' + dateParts[1];
             legalAdvisor.As_Of_Date__c = Date.valueOf(formattedDate);
 
-            if (shouldBeProccessed(legalAdvisor.Account_Number__c, legalAdvisor.Account_Status__c))
+            if (shouldBeProcessed(existingLegalAdvisors, legalAdvisor.Account_Number__c, 
+                legalAdvisor.Account_Status__c))
             {
-                legalAdvisorRecordsToUpdate.add(legalAdvisor);
+                clientsMap.put(legalAdvisor.Account_Number__c, legalAdvisorModel.Clients);
+            }
+        }
 
-                if (!legalAdvisorRecordsToUpdate.isEmpty())
+        if (!clientsMap.isEmpty())
+        {
+            List<Legal_Advisor__c> legalAdvisorsAboutToUpdate = new List<Legal_Advisor__c>();
+
+            for (Legal_Advisor__c legalAdvisor : existingLegalAdvisors)
+            {
+                if (clientsMap.containsKey(legalAdvisor.Account_Number__c))
                 {
-                    upsert legalAdvisorRecordsToUpdate Account_Number__c;
-                    processClients(legalAdvisor, legalAdvisorModel.Clients);
+                    legalAdvisorsAboutToUpdate.add(legalAdvisor);
                 }
             }
+            
+            List<Legal_Advisor__c> legalAdvisorsToUpdate = new List<Legal_Advisor__c>(
+                legalAdvisorsAboutToUpdate
+            );
+
+            processClients(legalAdvisorsToUpdate, clientsMap);
+
+            upsert legalAdvisorsToUpdate Account_Number__c;
         }
     }
 }
