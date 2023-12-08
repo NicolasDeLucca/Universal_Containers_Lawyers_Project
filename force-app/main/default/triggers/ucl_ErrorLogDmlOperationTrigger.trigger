@@ -5,8 +5,10 @@ trigger ucl_ErrorLogDmlOperationTrigger on ErrorLog__c (before insert, before up
      	if (
           Trigger.isInsert && 
           error.CreatedByUser__c || 
-          Trigger.isUpdate || 
-          Trigger.isDelete)
+          Trigger.isDelete &&
+          error.CreatedByUser__c || 
+          Trigger.isUpdate
+        )
         {
             string message = 'errors are for read only';
             error.addError(message);
