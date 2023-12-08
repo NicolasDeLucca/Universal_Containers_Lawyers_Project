@@ -3,6 +3,8 @@ public class ucl_ClientControllerTest
 {
     @isTest static void testGetClientCountByAdvisor()
     {
+        //Arrange
+
         Legal_Advisor__c legalAdvisor = new Legal_Advisor__c(
             Account_Number__c = 'a209ebbb-39c6-4852-8732-82237c0674fb',
             Account_Name__c = 'Fadeo',
@@ -24,9 +26,13 @@ public class ucl_ClientControllerTest
         
         insert client;
 
+        //Act
+
         Test.startTest();
         Integer clientCount = ucl_ClientController.getClientCountByAdvisor(legalAdvisor.Id);
         Test.stopTest();
+
+        //Assert
 
         System.assertEquals(1, clientCount, 'The number of Client__c records should be 1');
     }

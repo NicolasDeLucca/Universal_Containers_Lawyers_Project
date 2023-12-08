@@ -3,6 +3,8 @@ public class ucl_AdminServiceTest
 {
     @isTest static void testDeleteClientsNotInJson()
     {
+        //Arrange
+
         Legal_Advisor__c legalAdvisor = new Legal_Advisor__c
         (
             Account_Number__c = 'a209ebbb-39c6-4852-8732-82237c0674fb',
@@ -46,6 +48,8 @@ public class ucl_AdminServiceTest
              '}'+
             ']';
         
+        //Act
+
         Test.startTest();
         ucl_AdminService.deleteClientsNotInJson(jsonData);
         Test.stopTest();
@@ -56,6 +60,8 @@ public class ucl_AdminServiceTest
             FROM Client__c 
             WHERE CreatedByUser__c = false AND Legal_Advisor__c = :legalAdvisor.Id
         ];
+
+        //Assert
         
         System.assertEquals(0, clientCount, 'The number of Client__c records should be 0');
     }

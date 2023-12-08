@@ -3,11 +3,22 @@ private class ucl_ErrorHandlerTest
 {
 	@isTest static void ErrorsAreLoggedCorrectly()
     {
-        Integer errorsAmountbefore = [ SELECT COUNT() FROM ErrorLog__c ];
+        Integer errorsAmountbefore =
+        [ 
+            SELECT COUNT() 
+            FROM ErrorLog__c 
+        ];
+
+        //Arrange
         
         String expectedErrorMessage = 'nothing works, its a mess';
+        
+        //Act
+
     	ucl_ErrorHandler.HandleError(expectedErrorMessage);
         
+        //Assert
+
         List<ErrorLog__c> errorsLogged =
         [
             SELECT ErrorMessage__c
@@ -20,6 +31,8 @@ private class ucl_ErrorHandlerTest
     
     @isTest static void ErrorMessagesAreSentToAdmin()
     {
+        //Arrange
+
         String errorMessage = 'HELP!!';
         String ExpectedEmailSubject = 'Error Notification';
         String ExpectedEmailBody = 'An error occurred: ' + errorMessage;
@@ -31,11 +44,15 @@ private class ucl_ErrorHandlerTest
             FROM EmailMessage 
             WHERE ToAddress = :adminAddress
         ];
+
+        //Act
         
         Test.startTest();
         ucl_ErrorHandler.HandleError(errorMessage);
         Test.stopTest();
         
+        //Assert
+
         List<EmailMessage> sentEmails = 
         [
             SELECT Subject, TextBody 

@@ -3,6 +3,8 @@ private class ucl_DataParserTest
 {
 	@isTest static void jsonParserReturnsLegalAdvisorsAsExpected()
     {
+        //Arrange
+
         String jsonInput =  
             '[{' + 
             '"AccountNumber": "a209ebbb-39c6-4852-8732-82237c0674fb",' + 
@@ -21,8 +23,12 @@ private class ucl_DataParserTest
          	']'+
             '}]';
         
+        //Act
+
         List<ucl_LegalAdvisor> parsedLegalAdvisors = ucl_DataParser.parseLegalAdvisorsFromJson(jsonInput);
         
+        //Assert
+
         System.Assert.IsTrue(!parsedLegalAdvisors.isEmpty());
         System.Assert.IsTrue(parsedLegalAdvisors.size() == 1);
         
