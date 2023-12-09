@@ -1,4 +1,4 @@
-public with sharing class ucl_NightlyIntegrationService implements Schedulable
+public with sharing class ucl_NightlyIntegrationService implements Schedulable, Database.AllowsCallouts
 {
     public void execute(SchedulableContext SC)
     {

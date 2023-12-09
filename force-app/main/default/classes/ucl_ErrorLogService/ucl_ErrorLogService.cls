@@ -1,4 +1,4 @@
-public with sharing class ucl_ErrorLogService implements Schedulable 
+public with sharing class ucl_ErrorLogService implements Schedulable, Database.AllowsCallouts 
 {
     private static Integer deadlineDays = 30;
 
