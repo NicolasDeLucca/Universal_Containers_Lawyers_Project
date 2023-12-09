@@ -4,7 +4,10 @@ private class ucl_ErrorLogControllerTest
     @isTest static void testGetErrorLogs()
     {
         //Arrange
-        ErrorLog__c log = new ErrorLog__c(CreatedByUser__c = false, ErrorMessage__c='Test Error');
+        ErrorLog__c log = new ErrorLog__c(
+            CreatedByUser__c = false, 
+            ErrorMessage__c='Action restricted.'
+        );
         insert log;
 
         //Act
@@ -14,14 +17,17 @@ private class ucl_ErrorLogControllerTest
 
         //Assert
         System.assert.IsTrue(logs.size() == 1);
-        System.assertEquals(logs[0].ErrorMessage__c, 'Test Error');
+        System.assertEquals(logs[0].ErrorMessage__c, 'Action restricted.');
     }
 
     @isTest static void testErrorLogsShouldNotBeDeleted()
     {
         Integer completedDays = 2; 
         //Arrange
-        ErrorLog__c log = new ErrorLog__c(CreatedByUser__c = false, ErrorMessage__c='Test Error');
+        ErrorLog__c log = new ErrorLog__c(
+            CreatedByUser__c = false, 
+            ErrorMessage__c='Action restricted.'
+        );
         insert log;
 
         //Act
