@@ -41,16 +41,14 @@ public with sharing class ucl_AdminService
             SELECT Id, Legal_Advisor__c, Client_Number__c
             FROM Client__c 
             WHERE CreatedByUser__c = false
-            AND Legal_Advisor__c IN :legalAdvisorMap.keySet()
-        ];
+            AND Legal_Advisor__c IN :legalAdvisorMap.keySet()];
     
         List<Client__c> clientsToDelete = new List<Client__c>();
     
         for (Client__c client : allClients)
         {
             Legal_Advisor__c legalAdvisor = legalAdvisorMap.get(client.Legal_Advisor__c);
-            if (!parsedClientIds.get(String.valueOf(legalAdvisor.Account_Number__c)).
-                contains(client.Client_Number__c))
+            if (!parsedClientIds.get(String.valueOf(legalAdvisor.Account_Number__c)).contains(client.Client_Number__c))
             {
                 clientsToDelete.add(client);
             }

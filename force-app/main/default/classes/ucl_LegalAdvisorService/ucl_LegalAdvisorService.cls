@@ -46,7 +46,7 @@ public with sharing class ucl_LegalAdvisorService
 
         if (!processedClients.isEmpty())
         {
-            upsert processedClients Client_Number__c;
+            upsert processedClients Client_Number__c; 
         }
     }
 
@@ -102,6 +102,7 @@ public with sharing class ucl_LegalAdvisorService
                     legalAdvisorsToUpdate.add(legalAdvisor);
                 }
             }
+            
             //dml operations
             upsert legalAdvisorsToUpdate Account_Number__c;
             processClients(legalAdvisorsToUpdate, clientsMap);

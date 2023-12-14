@@ -29,7 +29,7 @@ public class ucl_AdminServiceTest
         insert client;
         
         String jsonData = 
-          '[' +
+            '[' +
              '{' + 
                 '"AccountNumber": "a209ebbb-39c6-4852-8732-82237c0674fb",' + 
                 '"AccountName": "Fadeo",' +
@@ -46,7 +46,7 @@ public class ucl_AdminServiceTest
                     '}'+
                 ']'+
              '}'+
-          ']';
+            ']';
         
         List<ucl_LegalAdvisor> legalAdvisors = ucl_DataParser.parseLegalAdvisorsFromJson(jsonData);
         
@@ -56,14 +56,14 @@ public class ucl_AdminServiceTest
         ucl_AdminService.deleteClientsNotInJson(legalAdvisors);
         Test.stopTest();
         
-        //Assert
-
         Integer clientCount = 
         [
             SELECT COUNT() 
             FROM Client__c 
             WHERE CreatedByUser__c = false AND Legal_Advisor__c = :legalAdvisor.Id
         ];
+
+        //Assert
         
         System.assertEquals(0, clientCount, 'The number of Client__c records should be 0');
     }

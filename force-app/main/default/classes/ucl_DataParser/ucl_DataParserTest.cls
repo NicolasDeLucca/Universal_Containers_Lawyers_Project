@@ -6,8 +6,7 @@ private class ucl_DataParserTest
         //Arrange
 
         String jsonInput =  
-         '['+
-          '{' + 
+            '[{' + 
             '"AccountNumber": "a209ebbb-39c6-4852-8732-82237c0674fb",' + 
             '"AccountName": "Fadeo",' +
             '"AccountStatus": "Enabled",' +
@@ -22,8 +21,7 @@ private class ucl_DataParserTest
             	'"ClientNumber": "12afa152-8115-492b-bb49-87399ab49af8"'+
               '}'+
          	']'+
-          '}'+
-         ']';
+            '}]';
         
         //Act
 
