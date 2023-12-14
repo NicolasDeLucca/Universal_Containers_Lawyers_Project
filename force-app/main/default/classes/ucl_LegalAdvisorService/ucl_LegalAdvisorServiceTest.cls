@@ -3,18 +3,8 @@ public class ucl_LegalAdvisorServiceTest
 {
     @isTest static void testLegalAdvisorsProcess()
     {
-        // Arrange
+        // Arrange    
         Date today = Date.today();
-        Legal_Advisor__c testLegalAdvisor = new Legal_Advisor__c
-        (
-            Account_Number__c = 'TestAccountNumber',
-            Account_Name__c = 'TestAccountName',
-            Name = 'TestAccountName',
-            Account_Status__c = 'Enabled',
-            As_Of_Date__c = today
-        );
-        
-        insert testLegalAdvisor;
 
         ucl_Client testClientModel = new ucl_Client();
         testClientModel.FirstName = 'TestFirstName';
@@ -32,13 +22,22 @@ public class ucl_LegalAdvisorServiceTest
             String.valueOf(today.day()) + '/' + String.valueOf(today.year());
         testLegalAdvisorModel.Clients = new List<ucl_Client>{testClientModel};
 
-        // Act    
+        Legal_Advisor__c testLegalAdvisor = new Legal_Advisor__c
+        (
+            Account_Number__c = 'TestAccountNumber',
+            Account_Name__c = 'TestAccountName',
+            Name = 'TestAccountName',
+            Account_Status__c = 'Enabled',
+            As_Of_Date__c = today
+        );
+        insert testLegalAdvisor;    
+            
+        // Act           
         Test.startTest();
         ucl_LegalAdvisorService.processLegalAdvisors(new List<ucl_LegalAdvisor>{testLegalAdvisorModel});
         Test.stopTest();
         
         // Assert
-        
         Legal_Advisor__c actualLegalAdvisor = 
         [
         	SELECT Id, Account_Number__c, Account_Name__c, Account_Status__c, As_Of_Date__c 
@@ -70,21 +69,18 @@ public class ucl_LegalAdvisorServiceTest
         System.assertEquals(testClientModel.ClientNumber, actualClient.Client_Number__c);
     }
 
-
 	@isTest static void testProcessLegalAdvisorsWithExistingEnabledLegalAdvisor() 
 	{
-        //Arrange
-        
-        Legal_Advisor__c existingLegalAdvisor = new Legal_Advisor__c(
+        Legal_Advisor__c testLegalAdvisor = new Legal_Advisor__c
+        (
             Account_Number__c = 'TestAccountNumber',
             Account_Name__c = 'TestAccountName',
             Name = 'TestAccountName',
             Account_Status__c = 'Enabled',
             As_Of_Date__c = Date.today()
         );
-        
-        insert existingLegalAdvisor;
-    
+        insert testLegalAdvisor;    
+            
         ucl_Client testClientModel = new ucl_Client();
         testClientModel.FirstName = 'TestFirstName';
         testClientModel.LastName = 'TestLastName';
@@ -101,24 +97,30 @@ public class ucl_LegalAdvisorServiceTest
             '/' + String.valueOf(Date.today().year());
         testLegalAdvisorModel.Clients = new List<ucl_Client>{testClientModel};
     
-        // Act
-            
+        // Act   
         Test.startTest();
         ucl_LegalAdvisorService.processLegalAdvisors(new List<ucl_LegalAdvisor>{testLegalAdvisorModel});
         Test.stopTest();
          
         // Assert
-   	
-        List<Client__c> actualClients = 
+        List<Legal_Advisor__c> actualLegalAdvisors =
         [
-            SELECT Id, First_Name__c, Last_Name__c, Email__c, Phone__c, Address__c, Client_Number__c, Legal_Advisor__c 
-            FROM Client__c 
-            WHERE Legal_Advisor__c = :existingLegalAdvisor.Id
+            SELECT Id
+            FROM Legal_Advisor__c
         ];
         
-        Client__c actualClient = actualClients[0];
+        System.assertEquals(actualLegalAdvisors.size(), 1);
+        Legal_Advisor__c actualLegalAdvisor = actualLegalAdvisors[0];
         
-        System.assertEquals(1, actualClients.size());
+        List<Client__c> actualClients = 
+        [
+            SELECT Client_Number__c
+            FROM Client__c
+        ];
+        
+        System.assertEquals(actualClients.size(), 1);
+        
+        Client__c actualClient = actualClients[0];
         System.assertEquals(testClientModel.ClientNumber, actualClient.Client_Number__c);
     }
 }
