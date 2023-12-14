@@ -1,18 +1,21 @@
 public with sharing class ucl_AdminService
 {
-    private static Map<String, String> getUniqueClientIdsFromJson(String jsonData)
+    private static Map<String, List<String>> getUniqueClientIdsFromJson(List<ucl_LegalAdvisor> parsedLegalAdvisors)
     {
-        Map<String, String> uniqueClientIds = new Map<String, String>();
+        Map<String, List<String>> uniqueClientIds = new Map<String, List<String>>();
         
-        List<ucl_LegalAdvisor> legalAdvisors = ucl_DataParser.parseLegalAdvisorsFromJson(jsonData);
-        for (ucl_LegalAdvisor legalAdvisor : legalAdvisors)
+        for (ucl_LegalAdvisor legalAdvisor : parsedLegalAdvisors)
         {
             List<ucl_Client> clients = legalAdvisor.Clients;
             if (clients != null && !clients.isEmpty())
             {
                 for (ucl_Client client : clients)
                 {
-                    uniqueClientIds.put(legalAdvisor.AccountNumber, client.ClientNumber);
+                    if (!uniqueClientIds.containsKey(legalAdvisor.AccountNumber)) 
+                    {
+                        uniqueClientIds.put(legalAdvisor.AccountNumber, new List<String>());
+                    }
+                    uniqueClientIds.get(legalAdvisor.AccountNumber).add(client.ClientNumber);
                 }
             }
         }
@@ -20,9 +23,9 @@ public with sharing class ucl_AdminService
         return uniqueClientIds;
     }
 
-    public static void deleteClientsNotInJson(String jsonData)
+    public static void deleteClientsNotInJson(List<ucl_LegalAdvisor> parsedLegalAdvisors)
     {
-        Map<String, String> parsedClientIds = getUniqueClientIdsFromJson(jsonData);
+        Map<String, List<String>> parsedClientIds = getUniqueClientIdsFromJson(parsedLegalAdvisors);
     
         List<Legal_Advisor__c> legalAdvisors = 
         [
@@ -38,14 +41,16 @@ public with sharing class ucl_AdminService
             SELECT Id, Legal_Advisor__c, Client_Number__c
             FROM Client__c 
             WHERE CreatedByUser__c = false
-            AND Legal_Advisor__c IN :legalAdvisorMap.keySet()];
+            AND Legal_Advisor__c IN :legalAdvisorMap.keySet()
+        ];
     
         List<Client__c> clientsToDelete = new List<Client__c>();
     
         for (Client__c client : allClients)
         {
             Legal_Advisor__c legalAdvisor = legalAdvisorMap.get(client.Legal_Advisor__c);
-            if (client.Client_Number__c != parsedClientIds.get(String.valueOf(legalAdvisor.Account_Number__c)))
+            if (!parsedClientIds.get(String.valueOf(legalAdvisor.Account_Number__c)).
+                contains(client.Client_Number__c))
             {
                 clientsToDelete.add(client);
             }

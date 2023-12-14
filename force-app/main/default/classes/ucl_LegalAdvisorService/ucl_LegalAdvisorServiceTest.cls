@@ -4,7 +4,6 @@ public class ucl_LegalAdvisorServiceTest
     @isTest static void testLegalAdvisorsProcess()
     {
         // Arrange
-        
         Date today = Date.today();
         Legal_Advisor__c testLegalAdvisor = new Legal_Advisor__c
         (
@@ -34,7 +33,6 @@ public class ucl_LegalAdvisorServiceTest
         testLegalAdvisorModel.Clients = new List<ucl_Client>{testClientModel};
 
         // Act    
-        
         Test.startTest();
         ucl_LegalAdvisorService.processLegalAdvisors(new List<ucl_LegalAdvisor>{testLegalAdvisorModel});
         Test.stopTest();

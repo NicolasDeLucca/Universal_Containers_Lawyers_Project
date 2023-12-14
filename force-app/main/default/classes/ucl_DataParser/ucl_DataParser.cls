@@ -25,7 +25,6 @@ public with sharing class ucl_DataParser
     public static List<ucl_LegalAdvisor> parseLegalAdvisorsFromJson(String jsonData)
     {
         List<ucl_LegalAdvisor> parsedLegalAdvisors = new List<ucl_LegalAdvisor>();
-
         List<Object> jsonList = (List<Object>) JSON.deserializeUntyped(jsonData);
 
         if (jsonList != null)
@@ -48,7 +47,7 @@ public with sharing class ucl_DataParser
                 }
             }
         }
-
+ 
         return parsedLegalAdvisors;
     }
 }
