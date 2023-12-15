@@ -68,4 +68,59 @@ public class ucl_LegalAdvisorServiceTest
         System.assertEquals(testClientModel.Address, actualClient.Address__c);
         System.assertEquals(testClientModel.ClientNumber, actualClient.Client_Number__c);
     }
+    
+    @isTest static void testProcessLegalAdvisorsWithExistingEnabledLegalAdvisor() 
+	{
+        Legal_Advisor__c testLegalAdvisor = new Legal_Advisor__c
+        (
+            Account_Number__c = 'TestAccountNumber',
+            Account_Name__c = 'TestAccountName',
+            Name = 'TestAccountName',
+            Account_Status__c = 'Enabled',
+            As_Of_Date__c = Date.today()
+        );
+        insert testLegalAdvisor;    
+            
+        ucl_Client testClientModel = new ucl_Client();
+        testClientModel.FirstName = 'TestFirstName';
+        testClientModel.LastName = 'TestLastName';
+        testClientModel.Email = 'test@example.com';
+        testClientModel.Phone = '1234567890';
+        testClientModel.Address = 'Test Address';
+        testClientModel.ClientNumber = 'TestClientNumber';
+    
+        ucl_LegalAdvisor testLegalAdvisorModel = new ucl_LegalAdvisor();
+        testLegalAdvisorModel.AccountNumber = 'TestAccountNumber';
+        testLegalAdvisorModel.AccountName = 'TestAccountName';
+        testLegalAdvisorModel.AccountStatus = 'Disabled';
+        testLegalAdvisorModel.AsOfDate = String.valueOf(Date.today().month()) + '/' + String.valueOf(Date.today().day()) +
+            '/' + String.valueOf(Date.today().year());
+        testLegalAdvisorModel.Clients = new List<ucl_Client>{testClientModel};
+    
+        // Act   
+        Test.startTest();
+        ucl_LegalAdvisorService.processLegalAdvisors(new List<ucl_LegalAdvisor>{testLegalAdvisorModel});
+        Test.stopTest();
+         
+        // Assert
+        List<Legal_Advisor__c> actualLegalAdvisors =
+        [
+            SELECT Id
+            FROM Legal_Advisor__c
+        ];
+        
+        System.assertEquals(actualLegalAdvisors.size(), 1);
+        Legal_Advisor__c actualLegalAdvisor = actualLegalAdvisors[0];
+        
+        List<Client__c> actualClients = 
+        [
+            SELECT Client_Number__c
+            FROM Client__c
+        ];
+        
+        System.assertEquals(actualClients.size(), 1);
+        
+        Client__c actualClient = actualClients[0];
+        System.assertEquals(testClientModel.ClientNumber, actualClient.Client_Number__c);
+    }
 }
