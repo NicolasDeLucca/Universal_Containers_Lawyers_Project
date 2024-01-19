@@ -63,10 +63,10 @@ public with sharing class ucl_LegalAdvisorService
         {
             Legal_Advisor__c legalAdvisor = existingLegalAdvisorsMap.get(legalAdvisorModel.AccountNumber);
               
-			if (
-             legalAdvisor == null || 
-             legalAdvisorModel.AccountStatus == 'Enabled' || 
-             hasEnabledStatus(existingLegalAdvisorsMap.values(), legalAdvisorModel.AccountNumber)
+            if (
+                legalAdvisor == null || 
+                legalAdvisorModel.AccountStatus == 'Enabled' || 
+                hasEnabledStatus(existingLegalAdvisorsMap.values(), legalAdvisorModel.AccountNumber)
             )
             {
                 if (legalAdvisor == null)
@@ -89,11 +89,9 @@ public with sharing class ucl_LegalAdvisorService
             }           
         }            
 
+        //dml operations
+        upsert legalAdvisorsToUpdate Account_Number__c;
         if (!clientsMap.isEmpty())
-        {
-            //dml operations
-            upsert legalAdvisorsToUpdate Account_Number__c;
             processClients(legalAdvisorsToUpdate, clientsMap);
-        }
     }
 }
